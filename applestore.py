@@ -10,7 +10,9 @@ url = 'https://apps.apple.com/de/app/internet-browser-firefox/id989804926#see-al
 
 #url = '/home/matthiasmaile/Documents/sk/appstoescrapper/apple_testcomments.html'
 
-url = input("Type in the URL ")
-appname = input("Type in the apps name ")
+appname = 'whatsapp'
+
+url = input("Type in the URL: ")
+appname = input("Type in the app name: ")
 
 get_applestore_comments(url).to_excel(appname + '.xlsx')
