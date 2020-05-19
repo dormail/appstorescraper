@@ -1,2 +1,2 @@
-# appstorescrapper
-A Programm for scrapping data about comments from google play and apple store
+# appstorescraper
+A Python script for scraping comments from the apple app store and google play store
