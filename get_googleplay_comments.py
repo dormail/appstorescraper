@@ -16,9 +16,9 @@ def get_googleplay_comments(url):
     time.sleep(7)
     
     # scrolling to bottom to load more comments 30 times
-    #for i in range(1):
-    #    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    #    time.sleep(2)
+    for i in range(30):
+        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
 
     html = browser.page_source
     browser.quit()
@@ -61,9 +61,9 @@ def get_googleplay_comments(url):
     comments = []
     for i in range(len(comment_list)):
         if comment_list[i] == []:
-            comments.append(shortcomment_list[i])
+            comments.append(shortcomment_list[i][0])
         else:
-            comments.append(comment_list[i])
+            comments.append(comment_list[i][0])
 
 
     # adding everything together into a pandas data frame
