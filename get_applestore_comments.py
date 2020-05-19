@@ -40,13 +40,13 @@ def get_applestore_comments(url):
     dates_tags = soup.find_all("time", class_="we-customer-review__date")
     dates_list = []
     for i in range(len(dates_tags)):
-        dates_list.append(dates_tags[i].contents)
+        dates_list.append(dates_tags[i].contents[0])
 
     # extracting comment titles
     title_tags = soup.find_all("h3", class_="we-truncate we-truncate--single-line ember-view we-customer-review__title")
     title_list = []
     for i in range(len(title_tags)):
-        title_list.append(title_tags[i].contents)
+        title_list.append(title_tags[i].contents[0])
     
     # extracting the content from the comment
     # contents can have different classes so I made an array for the class
@@ -62,22 +62,20 @@ def get_applestore_comments(url):
     for i in range(len(stars_tags)):
         stars_list.append(stars_tags[i].attrs['class'][1][-1])
 
+    print(len(title_list))
+    print(len(dates_list))
+    print(len(content_list))
+    print(len(stars_list))
 
 
     if len(title_list) != len(dates_list):
-        print("Fehler beim auslesen")
-        print("Listen nicht gleich lang")
-
+        print("len(title_list) != len(dates_list)")
     if len(dates_list) != len(content_list):
-        print("Fehler beim auslesen")
-        print("Listen nicht gleich lang")
+        print("len(dates_list) != len(content_list)")
 
     # creating the data frame for the result
     result = {'date': dates_list, 'title': title_list, 'content': content_list, 'stars': stars_list}
     result = pd.DataFrame(result)
 
-    if len(title_list) != len(dates_list) != len(content_list):
-        print("Fehler beim auslesen")
-        print("Listen nicht gleich lang")
 
     return result
