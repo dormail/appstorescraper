@@ -5,13 +5,36 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+
+import time
+
 def get_applestore_comments(url):
+    browser = webdriver.Firefox()
+    page = browser.get(url)
+
+    time.sleep(7)
+
+    for i in range(30):
+        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+
+    html = browser.page_source
+
+    browser.quit()
+
     # for loading directly from store page
     #page = requests.get(url)
-    #soup = BeautifulSoup(page.text, 'html.parser')
+
+    #print(html)
+    
+    # getting soup
+    soup = BeautifulSoup(html, 'html.parser')
 
     # for loading from saved source code
-    soup = BeautifulSoup(open('apple_testcomments.html'), 'html.parser')
+    #soup = BeautifulSoup(open('apple_testcomments.html'), 'html.parser')
 
     # extracting the dates to a list
     dates_tags = soup.find_all("time", class_="we-customer-review__date")
@@ -34,16 +57,10 @@ def get_applestore_comments(url):
 
     # extracting the stars given
     # stars a saved inside the tag, so first extracting the tags
-    stars_tags = soup.find_all("span", class_="we-star-rating-stars-outlines")
+    stars_tags = soup.find_all("span", class_=["we-star-rating-stars we-star-rating-stars-1", "we-star-rating-stars we-star-rating-stars-2", "we-star-rating-stars we-star-rating-stars-3", "we-star-rating-stars we-star-rating-stars-4", "we-star-rating-stars we-star-rating-stars-5"])
     stars_list = []
     for i in range(len(stars_tags)):
-        stars_list.append(stars_tags[i].contents)
-    # extracting the stars from the tags
-    for i in range(len(stars_list)):
-        # choosing the important tag
-        stars_list[i] = stars_list[i][1].attrs['class'][1]
-        stars_list[i] = stars_list[i][-1]
-    #print(stars_list[-1])
+        stars_list.append(stars_tags[i].attrs['class'][1][-1])
 
 
 
