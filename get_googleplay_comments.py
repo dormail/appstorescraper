@@ -1,8 +1,11 @@
 # a script which scrapes the data about comments on the google play store
 
 # selenium as a framework for opening websites
+import selenium
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.by import By
+from selenium.webdriver import ActionChains
 # for timeouts between scrolling down
 import time
 # beatifulSoup for analysing the html code
@@ -26,12 +29,21 @@ def get_googleplay_comments(url, scrolling, timeout):
     browser.get(url)
 
     time.sleep(7)
+    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    if (scrolling > 8):
+        print("A high scrolling number can break the programm")
+        print("Tests above 8 failed")
     
     # scrolling to bottom to load more comments 30 times
+    # for the button selenium searches for the Artists link, moves up to 
+    # the button and clicks
+    # the html parser can not handle more than 8 times scrolling down!
     for i in range(scrolling):
-        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        artist_link = browser.find_element_by_link_text('Artists')
+        ActionChains(browser).move_to_element(artist_link).move_by_offset(0,-867/5).click().perform()
         time.sleep(timeout)
-
+        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+    time.sleep(2)
     html = browser.page_source
     browser.quit()
 
