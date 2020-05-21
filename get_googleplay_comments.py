@@ -1,14 +1,26 @@
 # a script which scrapes the data about comments on the google play store
-import requests
-from bs4 import BeautifulSoup
-import pandas as pd
 
+# selenium as a framework for opening websites
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-
+# for timeouts between scrolling down
 import time
+# beatifulSoup for analysing the html code
+from bs4 import BeautifulSoup
+# return in pandas dataframe
+import pandas as pd
 
-def get_googleplay_comments(url):
+# url is the google play page (note: it has to be the "read more section"
+# from the app, not the app page itself). 
+# scrolling is the amount of times it should scroll down. Doubling it 
+# results in double the amount of commments scraped, but als doubles the 
+# runtime.
+# timeout sets the time in seconds between each scroll. It scales n:n for
+# the runtime, but should be set according to internet speed and compute
+# perfomance.
+# The function returns a pd.DataFrame with all the comments.
+
+def get_googleplay_comments(url, scrolling, timeout):
     # loading the page with selenium
     browser = webdriver.Firefox()
     browser.get(url)
@@ -16,9 +28,9 @@ def get_googleplay_comments(url):
     time.sleep(7)
     
     # scrolling to bottom to load more comments 30 times
-    #for i in range(1):
-    #    browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    #    time.sleep(2)
+    for i in range(scrolling):
+        browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(timeout)
 
     html = browser.page_source
     browser.quit()
@@ -61,9 +73,9 @@ def get_googleplay_comments(url):
     comments = []
     for i in range(len(comment_list)):
         if comment_list[i] == []:
-            comments.append(shortcomment_list[i])
+            comments.append(shortcomment_list[i][0])
         else:
-            comments.append(comment_list[i])
+            comments.append(comment_list[i][0])
 
 
     # adding everything together into a pandas data frame
