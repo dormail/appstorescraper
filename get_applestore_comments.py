@@ -61,10 +61,12 @@ def get_applestore_comments(url, scrolling, timeout):
     
     # extracting the content from the comment
     # contents can have different classes so I made an array for the class
-    # searching by class
-    content_tags = soup.find_all("blockquote", class_=["we-truncate we-truncate--multi-line we-truncate--interactive we-truncate--truncated ember-view we-customer-review__body", "we-truncate we-truncate--multi-line we-truncate--interactive ember-view we-customer-review__body", "we-clamp ember-view"])
-    # searching by id
-    #content_tags = soup.find_all("blockquote", attrs = {"id": "ember554"})
+    # looking for blockquotes, but makes problems with answers
+    #content_tags = soup.find_all("blockquote", class_=["we-truncate we-truncate--multi-line we-truncate--interactive we-truncate--truncated ember-view we-customer-review__body", "we-truncate we-truncate--multi-line we-truncate--interactive ember-view we-customer-review__body", "we-clamp ember-view"])
+
+    # looking for div tags with spcific class
+    content_tags = soup.find_all("div", class_="we-customer-review lockup ember-view")
+    
     content_list = []
     for i in range(len(content_tags)):
         content_list.append(content_tags[i].find_all('p')[0].string)
