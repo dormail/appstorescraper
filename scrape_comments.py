@@ -27,8 +27,10 @@ def scrape_comments(data):
     url_applestore_com = url_applestore + '#see-all/reviews'
     url_googleplay_com = url_googleplay + '&showAllReviews=true'
 
-    df_google = get_googleplay_comments(url_googleplay_com, scroll, timeout)
     df_apple = get_applestore_comments(url_applestore_com, scroll, timeout)
+    if (scroll > 8):
+        scroll = 8
+    df_google = get_googleplay_comments(url_googleplay_com, scroll, timeout)
 
     # adding meta data to the google df
     google_downloads = google_appdata[0].replace(",", "")
