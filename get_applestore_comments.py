@@ -10,6 +10,7 @@ import time
 from bs4 import BeautifulSoup
 # saving data in pandas.DataFrame
 import pandas as pd
+import numpy as np
 
 # url is the apple store page (note: it has to be the "read more section"
 # from the app, not the app page itself). 
@@ -95,7 +96,8 @@ def get_applestore_comments(url, scrolling, timeout):
         print("len(dates_list) != len(content_list)")
 
     # creating the data frame for the result
-    result = {'date': dates_list, 'title': title_list, 'content': content_list, 'stars': stars_list}
+    misc = np.zeros(len(dates_list))
+    result = {'other': misc, 'date': dates_list, 'title': title_list, 'content': content_list, 'stars': stars_list}
     result = pd.DataFrame(result)
 
     return result

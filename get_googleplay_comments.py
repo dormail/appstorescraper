@@ -12,6 +12,7 @@ import time
 from bs4 import BeautifulSoup
 # return in pandas dataframe
 import pandas as pd
+import numpy as np
 
 # url is the google play page (note: it has to be the "read more section"
 # from the app, not the app page itself). 
@@ -89,10 +90,11 @@ def get_googleplay_comments(url, scrolling, timeout):
         else:
             comments.append(comment_list[i][0])
 
-
     # adding everything together into a pandas data frame
-    data = {'date': dates_list, 'stars': stars_list, 'helpful': helpful_list, 'comment': comments}
+    misc = np.zeros(len(dates_list))
+
+    data = {'other': misc, 'date': dates_list, 'stars': stars_list, 'helpful': helpful_list, 'comment': comments}
     result = pd.DataFrame(data)
 
-    print(result)
+    #print(result)
     return result
