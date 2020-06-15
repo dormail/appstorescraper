@@ -34,16 +34,19 @@ def scrape_comments(data):
 
     # adding meta data to the google df
     google_downloads = google_appdata[0].replace(",", "")
+    google_downloads = google_appdata[0].replace(".", "")
     google_rating = google_appdata[1]
+    google_rating = google_rating.replace(",", ".")
+
     df_google.iat[0,0] = int(google_downloads)
     df_google.iat[1,0] = float(google_rating)
     # adding meta data to apple store df
     apple_downloads = apple_appdata[0]
-    apple_raing = apple_appdata[1]
+    apple_rating = apple_appdata[1]
     df_apple.iat[0,0] = int(apple_downloads)
-    df_apple.iat[1,0] = float(apple_raing)
+    df_apple.iat[1,0] = float(apple_rating)
 
-    df_google.to_excel(appname + '-google.xlsx')
-    df_apple.to_excel(appname + '-apple.xlsx')
+    df_google.to_excel('results/' + appname + '-google.xlsx')
+    df_apple.to_excel('results/' + appname + '-apple.xlsx')
 
 # scrape_comments.py end
