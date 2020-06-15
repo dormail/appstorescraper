@@ -40,7 +40,7 @@ def get_googleplay_comments(url, scrolling, timeout):
     # the button and clicks
     # the html parser can not handle more than 8 times scrolling down!
     for i in range(scrolling):
-        artist_link = browser.find_element_by_link_text('Artists')
+        artist_link = browser.find_element_by_link_text('Entwickler')
         ActionChains(browser).move_to_element(artist_link).move_by_offset(0,-867/5).click().perform()
         time.sleep(timeout)
         browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -53,19 +53,27 @@ def get_googleplay_comments(url, scrolling, timeout):
 
     # analysing the soup
     # scraping the dates
-    dates_tags = soup.find_all("span", class_="p2TkOb")
+    all_comments = soup.find_all("div", class_="zc7KVe")
+    print(len(all_comments))
+
+    dates_tags = []
+    for i in range(int(len(all_comments) / 2)):
+        # for some reason all dates appeared twice
+        dates_tags.append(all_comments[i * 2].find("span", class_="p2TkOb"))
+
     dates_list = []
     for i in range(len(dates_tags)):
         dates_list.append(dates_tags[i].contents[0])
+    #print(dates_list)
 
-    # scraping the stars given
-    stars_tags = soup.find_all("div", attrs = {'aria-label': ["Rated 1 stars out of five stars", "Rated 2 stars out of five stars", "Rated 3 stars out of five stars", "Rated 4 stars out of five stars", "Rated 5 stars out of five stars"]})
+    # scraping the stars given (tags named like the german tags)
+    stars_tags = soup.find_all("div", attrs = {'aria-label': ["Mit 1 von fünf Sternen bewertet", "Mit 2 von fünf Sternen bewertet", "Mit 3 von fünf Sternen bewertet", "Mit 4 von fünf Sternen bewertet", "Mit 5 von fünf Sternen bewertet"]})
     stars_list = []
     for i in range(len(stars_tags)):
-        stars_list.append(stars_tags[i].get('aria-label')[6])
+        stars_list.append(stars_tags[i].get('aria-label')[4])
 
-    # scraping 'number of times this review was rated helpful'
-    helpful_tags = soup.find_all("div", attrs={'aria-label': "Number of times this review was rated helpful"})
+    # scraping 'number of times this review was rated helpful' (in german)
+    helpful_tags = soup.find_all("div", attrs={'aria-label': "Gibt an, wie oft die Rezension als hilfreich bewertet wurde"})
     helpful_list = []
     for i in range(len(helpful_tags)):
         helpful_list.append(helpful_tags[i].contents[0])
@@ -89,6 +97,12 @@ def get_googleplay_comments(url, scrolling, timeout):
             comments.append(shortcomment_list[i][0])
         else:
             comments.append(comment_list[i][0])
+
+    print(len(comments))
+    print(len(dates_list))
+    print(len(stars_list))
+    print(len(helpful_list))
+    print(len(comments))
 
     # adding everything together into a pandas data frame
     misc = np.zeros(len(dates_list))
