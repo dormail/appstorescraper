@@ -61,5 +61,13 @@ def remove_letters(string):
     # removing white space
     result = result.replace(' ', '')
 
+    # special characters in german
+    result = result.replace('Ä', '')
+    result = result.replace('ä', '')
+    result = result.replace('Ö', '')
+    result = result.replace('ö', '')
+    result = result.replace('Ü', '')
+    result = result.replace('ü', '')
+
     return result
 # remove_letters.py end
